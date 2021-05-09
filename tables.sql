@@ -21,5 +21,5 @@ CREATE TABLE panier (
     ID_compte int FOREIGN KEY REFERENCES comptes,
     ID_visiteur int FOREIGN KEY REFERENCES visiteurs,
     ID_produit int FOREIGN KEY REFERENCES produits,
-    quantité int,
+    quantite int,
 );
