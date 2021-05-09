@@ -2,6 +2,7 @@ CREATE TABLE comptes (
     ID_compte int PRIMARY KEY SERIAL,
     nom text NOT NULL,
     prenom text NOT NULL,
+    adresse text NOT NULL,
     mail text NOT NULL,
     age int 
 );
