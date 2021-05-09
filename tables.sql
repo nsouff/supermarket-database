@@ -1,18 +1,25 @@
-CREATE TABLE Comptes (
+CREATE TABLE comptes (
     ID_compte int PRIMARY KEY SERIAL,
-    Nom text NOT NULL,
-    Prenom text NOT NULL,
-    Mail text NOT NULL,
-    Age int 
+    nom text NOT NULL,
+    prenom text NOT NULL,
+    mail text NOT NULL,
+    age int 
 );
 
-CREATE TABLE Visiteurs (
+CREATE TABLE visiteurs (
     ID_visiteur int PRIMARY KEY SERIAL
 );
 
-CREATE TABLE VariationPrix (
-    DateChangement timestamp NOT NULL,
-    NouveauPrix int NOT NULL,
-    ID_produit FOREIGN KEY REFERENCES Produits,
-    PRIMARY KEY(DateChangement, NouveauPrix, ID_produit)
+CREATE TABLE variationPrix (
+    dateChangement timestamp NOT NULL,
+    nouveauPrix int NOT NULL,
+    ID_produit FOREIGN KEY REFERENCES produits,
+    PRIMARY KEY(dateChangement, nouveauPrix, ID_produit)
+);
+
+CREATE TABLE panier (
+    ID_compte int FOREIGN KEY REFERENCES comptes,
+    ID_visiteur int FOREIGN KEY REFERENCES visiteurs,
+    ID_produit int FOREIGN KEY REFERENCES produits,
+    quantité int,
 );
