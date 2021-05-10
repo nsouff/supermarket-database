@@ -17,9 +17,9 @@ CREATE TYPE STATUS_COMMANDE AS ENUM ('Annulé', 'En cours', 'Livré');
 CREATE TABLE produits (
   id_produit SERIAL PRIMARY KEY,
   stock INT, CONSTRAINT stock_positif CHECK (stock >= 0),
-  prix INT, CONSTRAINT prix_positif CHECK (prix > 0),
+  prix REAL, CONSTRAINT prix_positif CHECK (prix > 0),
   nom TEXT,
-  péremption TIMESTAMP,
+  péremption DATE,
   bio BOOL NOT NULL,
   marque text,
   label_bio text,
@@ -32,8 +32,7 @@ CREATE TABLE produits (
       OR marque IS NULL),
   CONSTRAINT marque_is_not_null CHECK
     (type_produit NOT IN
-      ('Produit laitier', 'Epicerie', 'Boisson alcoolisé',
-      'Boisson non alcoolisé', 'Hygiène')
+      ('Epicerie', 'Boisson non alcoolisé', 'Hygiène')
     OR marque IS NOT NULL)
 );
 

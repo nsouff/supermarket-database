@@ -5,11 +5,11 @@ from random import random
 import os
 
 file = 'CSV/users.csv'
+seed()
 
 
 if os.path.exists(file):
     os.remove(file)
-seed()
 
 data = Faker()
 size = 10000
