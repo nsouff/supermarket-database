@@ -60,19 +60,22 @@ CREATE TABLE commandes (
 
 
 CREATE TABLE visiteurs (
-    ID_visiteur SERIAL PRIMARY KEY
+  ID_visiteur SERIAL PRIMARY KEY
 );
 
 CREATE TABLE variationPrix (
-    dateChangement timestamp NOT NULL,
-    nouveauPrix int NOT NULL,
-    ID_produit INT REFERENCES produits(id_produit),
-    PRIMARY KEY(dateChangement, nouveauPrix, ID_produit)
+  dateChangement DATE NOT NULL,
+  nouveauPrix int NOT NULL,
+  ID_produit INT REFERENCES produits(id_produit),
+  PRIMARY KEY(dateChangement, nouveauPrix, ID_produit)
 );
 
 CREATE TABLE panier (
-    ID_compte INT REFERENCES comptes,
-    ID_visiteur INT REFERENCES visiteurs,
-    ID_produit INT REFERENCES produits,
-    quantite int
+  ID_compte INT REFERENCES comptes,
+  ID_visiteur INT REFERENCES visiteurs,
+  ID_produit INT REFERENCES produits,
+  quantite int
+  CONSTRAINT one_id CHECK (
+    ID_compte IS NULL AND ID_visiteur IS NOT NULL OR
+    ID_compte IS NOT NULL AND ID_visiteur IS NULL)
 );
