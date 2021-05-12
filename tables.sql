@@ -1,3 +1,4 @@
+DROP FUNCTION IF EXISTS getStock CASCADE;
 DROP TABLE IF EXISTS produits CASCADE;
 DROP TABLE IF EXISTS comptes CASCADE;
 DROP TABLE IF EXISTS commandes CASCADE;
@@ -36,6 +37,12 @@ CREATE TABLE produits (
     OR marque IS NOT NULL)
 );
 
+CREATE FUNCTION getStock(INTEGER) RETURNS INTEGER
+  AS 'SELECT stock FROM produits WHERE id_produit=$1'
+  LANGUAGE SQL
+  IMMUTABLE
+  RETURNS NULL ON NULL INPUT;
+
 CREATE TABLE comptes (
   ID_compte SERIAL PRIMARY KEY,
   nom text NOT NULL,
@@ -54,8 +61,9 @@ CREATE TABLE commandes (
   note INT CONSTRAINT note_0_5 CHECK (note <= 5 AND note >= 0),
   ID_compte INT REFERENCES comptes(ID_compte),
   id_produit INT REFERENCES produits(id_produit),
-  quantite INT
-  CONSTRAINT rembourse_is_false CHECK (status='Annulé' OR rembourse=false)
+  quantite INT,
+  CONSTRAINT rembourse_is_false CHECK (status='Annulé' OR rembourse=false),
+  CONSTRAINT enough_quanti CHECK (getStock(ID_produit) >= quantite)
 );
 
 
@@ -75,8 +83,9 @@ CREATE TABLE panier (
   ID_compte INT REFERENCES comptes,
   ID_visiteur INT REFERENCES visiteurs,
   ID_produit INT REFERENCES produits,
-  quantite int
+  quantite int,
   CONSTRAINT one_id CHECK (
     ID_compte IS NULL AND ID_visiteur IS NOT NULL OR
-    ID_compte IS NOT NULL AND ID_visiteur IS NULL)
+    ID_compte IS NOT NULL AND ID_visiteur IS NULL),
+  CONSTRAINT enough_quanti CHECK (getStock(ID_produit) >= quantite)
 );
