@@ -65,9 +65,10 @@ CREATE TABLE visiteurs (
 
 CREATE TABLE variationPrix (
   dateChangement DATE NOT NULL,
-  nouveauPrix int NOT NULL,
+  nouveauPrix REAL NOT NULL,
   ID_produit INT REFERENCES produits(id_produit),
-  PRIMARY KEY(dateChangement, nouveauPrix, ID_produit)
+  PRIMARY KEY(dateChangement, nouveauPrix, ID_produit),
+  CONSTRAINT prix_pos CHECK (nouveauPrix > 0)
 );
 
 CREATE TABLE panier (
