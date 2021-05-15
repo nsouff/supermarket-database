@@ -34,6 +34,8 @@ for i in range(size):
         avis = lorem.sentence()
     if random.getrandbits(1):
         note = int(random.random() * 6)
+        if products[id_produit-1]['marque'] == 'Barilla':
+            note = int(random.random()*3 + 3)
     quantite = int(random.random()*int(products[id_produit-1]['stock']))
     delta = -int(random.random()*10)
     date = datetime.datetime.today() + datetime.timedelta(days=delta)
