@@ -5,7 +5,7 @@ import os
 
 random.seed()
 
-file = 'CSV/products.csv'
+file = '../CSV/products.csv'
 
 if os.path.exists(file):
     os.remove(file)
@@ -18,7 +18,7 @@ veget = ['Courgette', 'Poivron', 'Bettrave', 'Aubergine', 'Radis', 'Oignon',
 'Concombre', 'Haricot vert', 'Haricot rouge', 'Petit pois', 'Mais', 'Poireau']
 dairy = ['Yaourt nature', 'Lait ecreme', 'Lait demi ecreme', 'Creme',
 'Fromage de chevre', 'Compte', 'Morbier', 'Emmental', 'Camembert', 'Cantal']
-red_meat = ['Cote de beouf', 'Cote d\'agneau', 'Steak de beouf']
+red_meat = ['Cote de boeuf', 'Cote d\'agneau', 'Steak de beouf']
 poultry = ['Poulet entier', 'Cuisse de poulet', 'Aile de poulet', 'Canard entier']
 fish = ['Turbo', 'Dorade', 'Anchois', 'Sardine', 'Thon', 'Saumon', 'Truite',
 'Harang', 'Lotte', 'Rouget', 'Sole']
@@ -41,12 +41,20 @@ brands = {'Pate': ['Barilla', 'Panzanni', 'Rummo'],
 'Jus d\'abricot': ['Tropicana', 'Innocent', 'Pressade'],
 'Creme visage': ['Nivea', 'Cerave'],
 'Creme main': ['Nivea', 'Cerave'],
-'Papier toilette': ['Okay', 'Lotus']}
+'Papier toilette': ['Okay', 'Lotus'],
+'Vin rouge': ['Domaine de Villeneuve', 'Domaine du Moulin', 'Domain de la Borde'],
+'Vin blanc': ['Domaine de Villeneuve', 'Domaine du Moulin', 'Domain de la Borde'],
+'Rose': ['Domaine de Villeneuve', 'Domaine du Moulin', 'Domain de la Borde'],
+'Whisky': ['William Peal', 'Jack Daniels', 'Grants'],
+'Vodka': ['Zubrowka', 'Poliakov'],
+'Bière brune': ['Leffe', 'Guinness'],
+'Bière blonde': ['Leffe', 'Chouffe'],
+'Bière rousse': ['Guinness', 'Boréale']}
 
 
 products_type=[('Légume', veget, 1.5, 7), ('Fruit', fruits, 1.5, 5),
 ('Produit laitier', dairy, 1.5, 60), ('Viande rouge', red_meat, 10, 3),
-('Volaille', poultry, 8, 5), ('Poisson', fish, 6, 5), ('Epicerie', grocery, 1.2, 10000),
+('Volaille', poultry, 8, 5), ('Poisson', fish, 6, 5), ('Epicerie', grocery, 1.2, 1000),
 ('Boisson alcoolisé', alcohol, 8, None), ('Boisson non alcoolisé', drinks, 1.8, 21),
 ('Hygiène', hygiene, 5, 700)]
 sub_size = 1000
@@ -68,7 +76,7 @@ for type, list, price_moy, nb_day_perem_moy in products_type:
             label_bio = random.choice(labels_bio)
         perem = None
         if nb_day_perem_moy:
-            delta = int((random.random()-0.5)*(2/3)*nb_day_perem_moy)
+            delta = int((random.random()*(0.4) + 0.8)*nb_day_perem_moy)
             perem = datetime.datetime.today() + datetime.timedelta(days=delta)
         stock = int(random.random()*500)
         price = price_moy + (price_moy * (random.random() - 0.5))

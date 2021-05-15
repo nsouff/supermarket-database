@@ -3,9 +3,9 @@ import csv
 import random
 import os
 
-file = 'CSV/variationPrix.csv'
+file = '../CSV/variationPrix.csv'
 
-products_file = 'CSV/products.csv'
+products_file = '../CSV/products.csv'
 
 if not os.path.exists(products_file):
     print(products_file + ' must exists ...')

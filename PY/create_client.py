@@ -4,7 +4,7 @@ from random import seed
 from random import random
 import os
 
-file = 'CSV/users.csv'
+file = '../CSV/users.csv'
 seed()
 
 
