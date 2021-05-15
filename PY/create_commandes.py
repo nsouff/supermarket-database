@@ -19,7 +19,7 @@ products = None
 with open(product_file, 'r') as f:
     products = list(csv.DictReader(f, delimiter=';'))
 
-size = 100000
+size = 10000
 commandes = {}
 datas = [None for i in range(size)]
 for i in range(size):
