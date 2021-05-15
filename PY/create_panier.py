@@ -3,9 +3,9 @@ import datetime
 import random
 import csv
 
-prod_file = 'CSV/products.csv'
+prod_file = '../CSV/products.csv'
 
-file = 'CSV/paniers.csv'
+file = '../CSV/paniers.csv'
 
 if not os.path.exists(prod_file):
     print(prod_file + ' file must exists...')

@@ -4,8 +4,8 @@ import os
 import random
 import datetime
 
-file = 'CSV/commandes.csv'
-product_file = 'CSV/products.csv'
+file = '../CSV/commandes.csv'
+product_file = '../CSV/products.csv'
 random.seed()
 
 if os.path.exists(file):
