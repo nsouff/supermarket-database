@@ -57,7 +57,7 @@ GROUP BY PR.type_produit, PR.marque) AS REQ
 GROUP BY REQ.marque;
 
 -- VI)
---
+-- Contrainte :
 -- Calcul les notes moyennes des marques, selon les notes données par les clients à des produits livrés.
 -- Remarque :
 SELECT PR.marque, AVG(C.note)
@@ -70,7 +70,7 @@ GROUP BY PR.marque;
 
 -- VII)
 --
--- Calcul des dépensens moyennes de chaque client
+-- Calcul les dépensens moyennes de chaque client
 -- Remarque : 
 SELECT C.nom, C.prenom, AVG(CO.quantite * PR.prix)
 FROM comptes C, produits PR, commandes CO
