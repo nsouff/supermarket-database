@@ -1,7 +1,7 @@
 -- I)
 -- Contrainte : requête sur trois tables
 -- Trouve le prix total des paniers de chaque client connecté
--- Remarque : 
+-- Remarque : On peut complexifié la requête en incluant les paniers des visiteurs.
 SELECT C.ID_compte, C.nom, C.prenom, SUM(PA.quantite * PR.prix) 
 FROM comptes C, panier PA, produits PR 
 WHERE PA.id_produit = PR.id_produit AND C.id_compte = PA.id_compte 
@@ -30,7 +30,7 @@ HAVING AVG(V.nouveauprix) < 1;
 -- IV)
 -- Contrainte : auto-jointure
 -- Trouver des paires de produits de catégories différentes dont le prix à un moment donné été le même (pas forcément simultanément)
--- Remarque : 
+-- Remarque : Requête pas très intéressante.
 SELECT PR1.nom AS nom_produit_1, PR1.id_produit, PR2.nom AS nom_produit_2, PR2.id_produit
 FROM produits PR1, produits PR2, variationPrix V1, variationPrix V2
 WHERE PR1.type_produit <> PR2.type_produit 
@@ -59,6 +59,7 @@ GROUP BY REQ.marque;
 SELECT PR.marque, AVG(C.note)
 FROM produits PR, commandes C
 WHERE C.id_produit = PR.id_produit
+AND C.status = 'Livré'
 AND PR.marque IS NOT NULL
 AND C.note IS NOT NULL
 GROUP BY PR.marque;
@@ -67,7 +68,7 @@ GROUP BY PR.marque;
 -- VII)
 -- Contrainte :
 -- Calcul les dépensens moyennes de chaque client
--- Remarque : 
+-- Remarque : Cette moyenne ne se fait pas sur une durée : on n'a pas la dépense moyenne d'un client sur un mois par exemple
 SELECT C.nom, C.prenom, AVG(CO.quantite * PR.prix)
 FROM comptes C, produits PR, commandes CO
 WHERE C.ID_compte = CO.ID_compte
@@ -112,7 +113,7 @@ AND NOT EXISTS (
 -- X)
 -- Contrainte : Condition de totalité + agrégation (+ équivalente à IX))
 -- Trouver les marques dont tous les produits commandés ont tous leur note supérieure ou égale 3 (si la note n'est pas null)
--- Remarque :
+-- Remarque : COUNT igonre les NULL donc la clause CO2.note IS NOT NULL n'est peut être pas nécessaire.
 SELECT REQ.marque FROM (
     SELECT PR.marque, CO.note
     FROM produits PR, commandes CO
