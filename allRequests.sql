@@ -2,9 +2,9 @@
 -- Contrainte : requête sur trois tables
 -- Trouve le prix total des paniers de chaque client connecté
 -- Remarque : On peut complexifié la requête en incluant les paniers des visiteurs.
-SELECT C.ID_compte, C.nom, C.prenom, SUM(PA.quantite * PR.prix) 
-FROM comptes C, panier PA, produits PR 
-WHERE PA.id_produit = PR.id_produit AND C.id_compte = PA.id_compte 
+SELECT C.ID_compte, C.nom, C.prenom, SUM(PA.quantite * PR.prix)
+FROM comptes C, panier PA, produits PR
+WHERE PA.id_produit = PR.id_produit AND C.id_compte = PA.id_compte
 GROUP BY C.ID_compte, C.nom, C.prenom;
 
 -- II)
@@ -12,8 +12,8 @@ GROUP BY C.ID_compte, C.nom, C.prenom;
 -- Trouve les produits dont le prix maximum a, à un moment donné, été supérieur supérieur à 15€.
 -- Remarque : remplacer le 15 par le résultat d'une requête plus complexe.
 SELECT PR.id_produit, PR.nom, MAX(V.nouveauPrix) AS prix_maximum
-FROM variationPrix V, produits PR 
-WHERE PR.id_produit = V.id_produit 
+FROM variationPrix V, produits PR
+WHERE PR.id_produit = V.id_produit
 GROUP BY PR.nom, PR.id_produit
 HAVING MAX(V.nouveauPrix) > 15;
 
@@ -22,13 +22,13 @@ HAVING MAX(V.nouveauPrix) > 15;
 -- Trouver les produits dont la moyenne des prix au cours du temps est inférieure à la moyenne des prix actuels des produits de même type.
 -- Remarque : remplacer le 1 par le résultat d'une requête plus complexe.
 SELECT PR.id_produit, PR.nom, AVG(V.nouveauPrix) AS prix_moyen
-FROM variationPrix V, produits PR 
+FROM variationPrix V, produits PR
 WHERE PR.id_produit = V.id_produit
 GROUP BY PR.id_produit, PR.nom
 HAVING AVG(V.nouveauPrix) < (
     SELECT AVG(P.prix)
     FROM produits P
-    WHERE P.type_produit = PR.type_produit 
+    WHERE P.type_produit = PR.type_produit
 );
 
 -- IV)
@@ -37,7 +37,7 @@ HAVING AVG(V.nouveauPrix) < (
 -- Remarque : Requête pas très intéressante.
 SELECT PR1.nom AS nom_produit_1, PR1.id_produit, PR2.nom AS nom_produit_2, PR2.id_produit
 FROM produits PR1, produits PR2, variationPrix V1, variationPrix V2
-WHERE PR1.type_produit <> PR2.type_produit 
+WHERE PR1.type_produit <> PR2.type_produit
 AND PR1.id_produit = V1.id_produit
 AND PR2.id_produit = V2.id_produit
 AND V1.nouveauPrix = V2.nouveauPrix;
@@ -83,10 +83,10 @@ GROUP BY C.nom, C.prenom;
 -- Contrainte : Sous-requête dans le WHERE
 -- Trouve toutes les marques qui ne vendent pas des produits de type 'Epicerie'.
 -- Remarque :
-SELECT DISTINCT PR1.marque 
+SELECT DISTINCT PR1.marque
 FROM produits PR1
 WHERE PR1.marque NOT IN
-(SELECT DISTINCT PR2.marque 
+(SELECT DISTINCT PR2.marque
 FROM produits PR2
 WHERE PR2.marque IS NOT NULL
 AND PR2.type_produit = 'Epicerie');
@@ -97,7 +97,7 @@ AND PR2.type_produit = 'Epicerie');
 -- Remarque : Requête très lente
 SELECT DISTINCT PRC.marque
 FROM produits PRC
-WHERE PRC.marque IS NOT NULL 
+WHERE PRC.marque IS NOT NULL
 AND NOT EXISTS (
     SELECT C.id_produit
     FROM produits P, commandes C
@@ -150,13 +150,21 @@ WHERE REQ.id_commande IS NULL;
 
 -- XII)
 -- Contrainte : requêtes équivalentes sans null, mais différentes avec
---
+-- Séléctionne les comptes ayant fait une commande mais n'ayant pas de panier,
+-- mais ne marche pas à cause des null
 -- Remarque :
+SELECT DISTINCT c.id_compte
+FROM commandes c
+WHERE c.id_compte NOT IN (
+  SELECT p.id_compte FROM panier p);
 
 -- XIII)
--- Contrainte : requêtes équivalentes sans null, mais différentes avec
---
+-- Contrainte : requêtes équivalentes sans null, on obtient cette fois le bon
+-- résultat
 -- Remarque :
+SELECT c.id_compte FROM commandes c
+EXCEPT
+SELECT p.id_compte FROM panier p;
 
 -- XIV)
 -- Contrainte : Sous-requête corrélée
@@ -167,4 +175,3 @@ WHERE REQ.id_commande IS NULL;
 -- Contrainte :
 --
 -- Remarque :
-
