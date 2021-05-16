@@ -30,9 +30,9 @@ for i in range(size):
     if status=='Annulé':
         rembourse = bool(random.getrandbits(1))
     avis = note = None
-    if random.getrandbits(1):
+    if status=='Livré' and random.getrandbits(1):
         avis = lorem.sentence()
-    if random.getrandbits(1):
+    if status=='Livré' and random.getrandbits(1):
         note = int(random.random() * 6)
         if products[id_produit-1]['marque'] == 'Barilla':
             note = int(random.random()*3 + 3)
