@@ -2,10 +2,10 @@
 -- Contrainte : requête sur trois tables
 -- Trouve le prix total des paniers de chaque client connecté
 -- Remarque : 
-SELECT C.nom, C.prenom, SUM(PA.quantite * PR.prix) 
+SELECT C.ID_compte, C.nom, C.prenom, SUM(PA.quantite * PR.prix) 
 FROM comptes C, panier PA, produits PR 
 WHERE PA.id_produit = PR.id_produit AND C.id_compte = PA.id_compte 
-GROUP BY C.nom, C.prenom;
+GROUP BY C.ID_compte, C.nom, C.prenom;
 
 -- II)
 -- Contrainte : requête avec GROUP BY et HAVING
@@ -16,13 +16,6 @@ FROM variationPrix V, produits PR
 WHERE PR.id_produit = V.id_produit 
 GROUP BY PR.nom, PR.id_produit
 HAVING MAX(V.nouveauprix) > 15;
-
--- Avec en plus datechangement -> problèmes
-SELECT V.datechangement, PR.id_produit, PR.nom, MAX(V.nouveauprix) AS prix_maximum
-FROM variationPrix V, produits PR 
-WHERE PR.id_produit = V.id_produit 
-GROUP BY PR.nom, PR.id_produit, V.datechangement
-HAVING MAX(V.nouveauprix) > 16;
 
 -- III)
 -- Contrainte : requête avec GROUP BY et HAVING
@@ -95,12 +88,30 @@ AND PR2.type_produit = 'Epicerie');
 
 -- IX)
 -- Contrainte : Condition de totalité + sous-requêtes corrélées (+ équivalente à X))
--- Trouver les marques dont tous les produits ont toutes leurs notes au dessus de 3 (si la note n'est pas null)
--- Remarque :
+-- Trouver les marques dont tous les produits commandés ont tous leur note supérieure ou égale 3 (si la note n'est pas null)
+-- Remarque : Requête très lente
+SELECT DISTINCT PRC.marque
+FROM produits PRC
+WHERE PRC.marque IS NOT NULL 
+AND NOT EXISTS (
+    SELECT C.id_produit
+    FROM produits P, commandes C
+    WHERE P.marque = PRC.marque
+    AND C.note IS NOT NULL
+    AND P.id_produit = C.id_produit
+    AND P.id_produit NOT IN (
+            SELECT CO.id_produit
+            FROM commandes CO, produits PR
+            WHERE CO.id_produit = PR.id_produit
+            AND CO.note IS NOT NULL
+            AND CO.note >= 3
+            AND PR.marque = PRC.marque
+        )
+);
 
 -- X)
 -- Contrainte : Condition de totalité + agrégation (+ équivalente à IX))
--- Trouver les marques dont tous les produits commandés ont tous leurs notes au dessus de 3 (si la note n'est pas null)
+-- Trouver les marques dont tous les produits commandés ont tous leur note supérieure ou égale 3 (si la note n'est pas null)
 -- Remarque :
 SELECT REQ.marque FROM (
     SELECT PR.marque, CO.note
@@ -108,8 +119,8 @@ SELECT REQ.marque FROM (
     WHERE PR.id_produit = CO.id_produit
     AND CO.note IS NOT NULL
     AND PR.marque IS NOT NULL
-    AND CO.note > 3
-    ) AS REQ
+    AND CO.note >= 3
+) AS REQ
 GROUP BY REQ.marque
 HAVING COUNT(REQ.note) = (
     SELECT COUNT(CO2.note)
@@ -117,16 +128,20 @@ HAVING COUNT(REQ.note) = (
     WHERE CO2.id_produit = PR2.id_produit
     AND CO2.note IS NOT NULL
     AND PR2.marque = REQ.marque
-    );
+);
 
 -- XI)
 -- Contrainte : Jointure externe
---
--- Remarque :
-SELECT PR.id_produit, PR.nom, CO.id_commande
-FROM commandes CO
-LEFT OUTER JOIN produits PR
-ON PR.id_produit = CO.id_produit;
+-- Sélectionne les produits qui ne sont pas commandés
+-- Remarque : Sélectionne aussi les produits qui sont dans des commandes annulées et sous requête peut être évitée par une jointure.
+SELECT REQ.id_produit, REQ.nom
+FROM (
+    SELECT PR.id_produit, PR.nom, CO.id_commande
+    FROM produits PR
+    LEFT OUTER JOIN commandes CO
+    ON PR.id_produit = CO.id_produit
+) AS REQ
+WHERE REQ.id_commande IS NULL;
 
 -- XII)
 -- Contrainte : requêtes équivalentes sans null, mais différentes avec
@@ -139,7 +154,7 @@ ON PR.id_produit = CO.id_produit;
 -- Remarque :
 
 -- XIV)
--- Contrainte :
+-- Contrainte : Sous-requête corrélée
 --
 -- Remarque :
 
