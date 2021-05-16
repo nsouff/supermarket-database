@@ -11,21 +11,25 @@ GROUP BY C.ID_compte, C.nom, C.prenom;
 -- Contrainte : requête avec GROUP BY et HAVING
 -- Trouve les produits dont le prix maximum a, à un moment donné, été supérieur supérieur à 15€.
 -- Remarque : remplacer le 15 par le résultat d'une requête plus complexe.
-SELECT PR.id_produit, PR.nom, MAX(V.nouveauprix) AS prix_maximum
+SELECT PR.id_produit, PR.nom, MAX(V.nouveauPrix) AS prix_maximum
 FROM variationPrix V, produits PR 
 WHERE PR.id_produit = V.id_produit 
 GROUP BY PR.nom, PR.id_produit
-HAVING MAX(V.nouveauprix) > 15;
+HAVING MAX(V.nouveauPrix) > 15;
 
 -- III)
 -- Contrainte : requête avec GROUP BY et HAVING
--- Trouver les produits dont le prix moyen est inférieur à 1€.
+-- Trouver les produits dont la moyenne des prix au cours du temps est inférieure à la moyenne des prix actuels des produits de même type.
 -- Remarque : remplacer le 1 par le résultat d'une requête plus complexe.
-SELECT PR.id_produit, PR.nom, AVG(V.nouveauprix) AS prix_moyen
+SELECT PR.id_produit, PR.nom, AVG(V.nouveauPrix) AS prix_moyen
 FROM variationPrix V, produits PR 
 WHERE PR.id_produit = V.id_produit
 GROUP BY PR.id_produit, PR.nom
-HAVING AVG(V.nouveauprix) < 1;
+HAVING AVG(V.nouveauPrix) < (
+    SELECT AVG(P.prix)
+    FROM produits P
+    WHERE P.type_produit = PR.type_produit 
+);
 
 -- IV)
 -- Contrainte : auto-jointure
