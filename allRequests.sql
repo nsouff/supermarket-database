@@ -1,7 +1,7 @@
 -- I)
 -- Contrainte : requête sur trois tables
 -- Trouve le prix total des paniers de chaque client connecté
--- Remarque : On peut complexifié la requête en incluant les paniers des visiteurs.
+-- Remarque : On peut complexifier la requête en incluant les paniers des visiteurs.
 SELECT C.ID_compte, C.nom, C.prenom, SUM(PA.quantite * PR.prix)
 FROM comptes C, panier PA, produits PR
 WHERE PA.id_produit = PR.id_produit AND C.id_compte = PA.id_compte
@@ -71,7 +71,7 @@ GROUP BY PR.marque;
 
 -- VII)
 -- Contrainte :
--- Calcul les dépensens moyennes de chaque client
+-- Calcul le prix moyen d'une commande pour chaque client
 -- Remarque : Cette moyenne ne se fait pas sur une durée : on n'a pas la dépense moyenne d'un client sur un mois par exemple
 SELECT C.nom, C.prenom, AVG(CO.quantite * PR.prix)
 FROM comptes C, produits PR, commandes CO
@@ -167,11 +167,42 @@ EXCEPT
 SELECT p.id_compte FROM panier p;
 
 -- XIV)
--- Contrainte : Sous-requête corrélée
---
+-- Contrainte :
+-- Calcule la valeur de toutes les commandes remboursées
 -- Remarque :
+SELECT SUM(P.prix * C.quantite)
+FROM produits P, commandes C
+WHERE C.id_produit = P.id_produit
+AND C.rembourse = TRUE;
 
 -- XV)
 -- Contrainte :
---
+-- Trouve tous les produits dont la date de péremption sera dépassé dans cinq jours ou moins ou est déjà dépassée
 -- Remarque :
+SELECT P.id_produit, P.nom
+FROM produits P
+WHERE P.péremption - (SELECT current_date) <= 5;
+
+-- XVI)
+-- Contrainte :
+-- Trouve le produit le plus vendu
+-- Remarque :
+WITH Q AS (SELECT PR.id_produit, SUM(C.quantite)
+FROM produits PR, commandes C
+WHERE PR.id_produit = C.id_produit
+GROUP BY PR.id_produit)
+SELECT P.nom, P.id_produit
+FROM produits P, Q
+WHERE P.id_produit = Q.id_produit
+AND Q.sum = (SELECT MAX(Q.sum) FROM Q);
+
+-- XVII)
+-- Contrainte :
+-- Trouve le nombre de clients (comptes) qui n'ont pas de commande
+-- Remarque :
+SELECT COUNT(CO.id_compte)
+FROM comptes CO
+WHERE CO.id_compte NOT IN(
+    SELECT DISTINCT C.id_compte
+    FROM commandes C
+);
