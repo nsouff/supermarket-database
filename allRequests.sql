@@ -189,8 +189,8 @@ WITH P_BIO AS (
 )
 SELECT
   P_BIO.type_produit,
-  (P_BIO.avg_prix - P_NOT_BIO.avg_prix) AS diff_bio,
-  CAST ((100*P_BIO.avg_prix)/P_NOT_BIO.avg_prix - 100 AS text) || '%'
+  TRUNC (CAST (P_BIO.avg_prix - P_NOT_BIO.avg_prix AS NUMERIC), 2) AS diff_bio,
+  CAST ( (TRUNC( CAST( (100*P_BIO.avg_prix)/P_NOT_BIO.avg_prix - 100 AS NUMERIC), 1)) AS text) || '%'
     AS diff_bio_perc
 FROM P_BIO
 JOIN P_NOT_BIO ON P_BIO.type_produit=P_NOT_BIO.type_produit;

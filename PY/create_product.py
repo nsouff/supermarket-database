@@ -70,16 +70,17 @@ datas = [None for i in range(len(products_type)*sub_size)]
 i = 0
 for type, list, price_moy, nb_day_perem_moy in products_type:
     for j in range(sub_size):
+        price = price_moy + (price_moy * (random.random() - 0.5))
         bio = bool(random.getrandbits(1))
         label_bio = None
         if bio:
+            price *= 1.1
             label_bio = random.choice(labels_bio)
         perem = None
         if nb_day_perem_moy:
             delta = int((random.random()*(0.4) + 0.8)*nb_day_perem_moy)
             perem = datetime.datetime.today() + datetime.timedelta(days=delta)
         stock = int(random.random()*500)
-        price = price_moy + (price_moy * (random.random() - 0.5))
         name = random.choice(list)
         brand = None
         if name in brands:
