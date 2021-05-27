@@ -62,8 +62,7 @@ CREATE TABLE commandes (
   ID_compte INT REFERENCES comptes(ID_compte),
   id_produit INT REFERENCES produits(id_produit),
   quantite INT,
-  CONSTRAINT rembourse_is_false CHECK (status='Annulé' OR rembourse=false),
-  CONSTRAINT enough_quanti CHECK (getStock(ID_produit) >= quantite)
+  CONSTRAINT rembourse_is_false CHECK (status='Annulé' OR rembourse=false)
 );
 
 
