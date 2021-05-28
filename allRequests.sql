@@ -194,3 +194,24 @@ SELECT
     AS diff_bio_perc
 FROM P_BIO
 JOIN P_NOT_BIO ON P_BIO.type_produit=P_NOT_BIO.type_produit;
+
+
+--- AUTRE2
+WITH REQ AS (
+  SELECT CL.prenom, CL.nom, PR.provenance, SUM(CO.quantite)
+  FROM comptes CL, produits PR
+  NATURAL JOIN commandes CO
+  WHERE PR.provenance IS NOT NULL
+  GROUP BY (CL.prenom, CL.nom, PR.provenance)
+)
+SELECT
+  R1.prenom,
+  R1.nom,
+  ('Miss/Mister ' || R1.provenance) AS award,
+  R1.sum
+FROM REQ R1
+WHERE R1.sum >= ALL (
+  SELECT R2.sum
+  FROM REQ R2
+  WHERE R2.provenance=R1.provenance
+);
