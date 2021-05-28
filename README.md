@@ -3,6 +3,8 @@
 Nous souhaitons créer la base de données d'un commerce de "première nécessité", vendant de la nourriture, des boissons et des produits d'hygiène. Notre modélisation représente cinq classes de données différentes: les produits en vente, les clients, les paniers des clients, les commandes effectuées par les clients ainsi que la variation des prix des produits.
 Soulignons avant toute chose que nous avons utilisés les mêmes notations que celles introduites en cours.
 
+## Modélisation
+
 #### Produits
 Les données liées aux produits en vente sont organisées en un système de spécialisation classique. Vous trouverez ainsi une table ``Produits`` de laquelle hérite tous les articles en ventes. Aussi préciserons-nous qu'une instance de la table Produits ne représente pas un unique article, mais une classe d'articles: par exemple l'instance associée au produit "jus d'orange Tropicana" représente tous les jus d'orange Tropicana mis en vente.
 
@@ -18,3 +20,7 @@ Les paniers sont modélisés par une association entre ``Clients`` et ``Produits
 
 #### Variations des prix
 Enfin, les variations des prix sont modélisées par une entité faible, associée à la tables ``Produits``.
+
+## Données publiques utilisées
+
+- https://data.world/len/us-first-names-database
