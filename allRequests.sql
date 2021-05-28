@@ -199,8 +199,9 @@ JOIN P_NOT_BIO ON P_BIO.type_produit=P_NOT_BIO.type_produit;
 --- AUTRE2
 WITH REQ AS (
   SELECT CL.prenom, CL.nom, PR.provenance, SUM(CO.quantite)
-  FROM comptes CL, produits PR
-  NATURAL JOIN commandes CO
+  FROM comptes CL
+  JOIN commandes CO ON CO.ID_compte=CL.id_compte
+  JOIN produits PR ON PR.ID_produit=CO.ID_produit
   WHERE PR.provenance IS NOT NULL
   GROUP BY (CL.prenom, CL.nom, PR.provenance)
 )
